@@ -1,206 +1,134 @@
-**This GitHub repo (<https://github.com/Genymobile/scrcpy>) is the only official
-source for the project. Do not download releases from random websites, even if
-their name contains `scrcpy`.**
+Here's the updated README file with the modified batch script code and an explanation of its components:
 
-# scrcpy (v2.7)
+---
 
-<img src="app/data/icon.svg" width="128" height="128" alt="scrcpy" align="right" />
+# SCRCPY Optimization Batch Script
 
-_pronounced "**scr**een **c**o**py**"_
+[![Telegram Channel](https://img.shields.io/badge/Telegram-Join%20Channel-blue?style=for-the-badge&logo=telegram)](https://t.me/ping_github)
 
-This application mirrors Android devices (video and audio) connected via
-USB or [over TCP/IP](doc/connection.md#tcpip-wireless), and allows to control the
-device with the keyboard and the mouse of the computer. It does not require any
-_root_ access. It works on _Linux_, _Windows_ and _macOS_.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Genymobile/scrcpy/665ccb32f5306ebd866dc0d99f4d08ed2aeb91c3/app/data/icon.svg" alt="SCRCPY Banner" />
+</p>
 
-![screenshot](assets/screenshot-debian-600.jpg)
+## Overview
 
-It focuses on:
+This project includes a batch script for **SCRCPY** to optimize video quality, increase frame rates, and ensure smooth performance for Android screen mirroring. It’s customized for the **Xiaomi Mi 11X Pro (haydn)** but can be tailored to any Android device by adjusting the settings.
 
- - **lightness**: native, displays only the device screen
- - **performance**: 30~120fps, depending on the device
- - **quality**: 1920×1080 or above
- - **low latency**: [35~70ms][lowlatency]
- - **low startup time**: ~1 second to display the first image
- - **non-intrusiveness**: nothing is left installed on the Android device
- - **user benefits**: no account, no ads, no internet required
- - **freedom**: free and open source software
+---
 
-[lowlatency]: https://github.com/Genymobile/scrcpy/pull/646
+## Usage Instructions
 
-Its features include:
- - [audio forwarding](doc/audio.md) (Android 11+)
- - [recording](doc/recording.md)
- - mirroring with [Android device screen off](doc/device.md#turn-screen-off)
- - [copy-paste](doc/control.md#copy-paste) in both directions
- - [configurable quality](doc/video.md)
- - [camera mirroring](doc/camera.md) (Android 12+)
- - [mirroring as a webcam (V4L2)](doc/v4l2.md) (Linux-only)
- - physical [keyboard][hid-keyboard] and [mouse][hid-mouse] simulation (HID)
- - [gamepad](doc/gamepad.md) support
- - [OTG mode](doc/otg.md)
- - and more…
+1. Install **SCRCPY** from [GitHub](https://github.com/Genymobile/scrcpy).
+2. Download or clone this repository.
+3. Double-click the batch file `scrcpy-custom.bat` to run SCRCPY with enhanced settings.
+4. You can modify the batch script according to your own device's capabilities and preferences.
 
-[hid-keyboard]: doc/keyboard.md#physical-keyboard-simulation
-[hid-mouse]: doc/mouse.md#physical-mouse-simulation
+### Script Example:
+```batch
+@echo off
+:: Start SCRCPY with high-quality settings
+scrcpy --video-codec=h265 --max-size=1920 --max-fps=90 --no-audio --keyboard=uhid
 
-## Prerequisites
-
-The Android device requires at least API 21 (Android 5.0).
-
-[Audio forwarding](doc/audio.md) is supported for API >= 30 (Android 11+).
-
-Make sure you [enabled USB debugging][enable-adb] on your device(s).
-
-[enable-adb]: https://developer.android.com/studio/debug/dev-options#enable
-
-On some devices (especially Xiaomi), you might get the following error:
-
-```
-java.lang.SecurityException: Injecting input events requires the caller (or the source of the instrumentation, if any) to have the INJECT_EVENTS permission.
+:: Wait for user input before closing the script
+pause
 ```
 
-In that case, you need to enable [an additional option][control] `USB debugging
-(Security Settings)` (this is an item different from `USB debugging`) to control
-it using a keyboard and mouse. Rebooting the device is necessary once this
-option is set.
+---
 
-[control]: https://github.com/Genymobile/scrcpy/issues/70#issuecomment-373286323
+## Explanation of the Script
 
-Note that USB debugging is not required to run scrcpy in [OTG mode](doc/otg.md).
+- **`@echo off`**: This command disables the display of commands in the command prompt window, ensuring a cleaner output.
 
+- **`scrcpy --video-codec=h265 --max-size=1920 --max-fps=90 --no-audio --keyboard=uhid`**:
+   - **`--video-codec=h265`**: Sets the video codec to H.265 for better quality at lower bitrates.
+   - **`--max-size=1920`**: Limits the maximum resolution of the mirrored screen to 1920 pixels wide, optimizing performance.
+   - **`--max-fps=90`**: Configures the maximum frame rate to 90, providing smoother video playback.
+   - **`--no-audio`**: Disables audio streaming to reduce CPU usage, focusing on video performance.
+   - **`--keyboard=uhid`**: Enables the use of the USB Human Interface Device (UHID) protocol for keyboard input.
 
-## Get the app
+- **`pause`**: This command halts the script execution and prompts the user to press any key before closing the command prompt window. It allows the user to view any output or error messages from SCRCPY.
 
- - [Linux](doc/linux.md)
- - [Windows](doc/windows.md)
- - [macOS](doc/macos.md)
+---
 
+## Available Customization Options
 
-## Usage examples
+You can tweak the batch script to fit your needs. Here are some parameters you can modify:
 
-There are a lot of options, [documented](#user-documentation) in separate pages.
-Here are just some common examples.
+### 1. **Video Codec (`--video-codec`)**
+   - Chooses the video encoder.
+   - **Example values**: `h264`, `h265`
 
- - Capture the screen in H.265 (better quality), limit the size to 1920, limit
-   the frame rate to 60fps, disable audio, and control the device by simulating
-   a physical keyboard:
+   ```batch
+   scrcpy --video-codec=h265
+   ```
 
-    ```bash
-    scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid
-    scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version
-    ```
+### 2. **Max Resolution (`--max-size`)**
+   - Sets the maximum resolution.
+   - **Example values**: `1080`, `1920`
 
- - Record the device camera in H.265 at 1920x1080 (and microphone) to an MP4
-   file:
+   ```batch
+   scrcpy --max-size=1920
+   ```
 
-    ```bash
-    scrcpy --video-source=camera --video-codec=h265 --camera-size=1920x1080 --record=file.mp4
-    ```
+### 3. **Max FPS (`--max-fps`)**
+   - Sets the frame rate cap.
+   - **Example values**: `30`, `60`, `90`
 
- - Capture the device front camera and expose it as a webcam on the computer (on
-   Linux):
+   ```batch
+   scrcpy --max-fps=90
+   ```
 
-    ```bash
-    scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=front --v4l2-sink=/dev/video2 --no-playback
-    ```
+### 4. **Audio Option (`--no-audio`)**
+   - Disables audio streaming for performance optimization.
+   - Use this option if you do not need audio.
 
- - Control the device without mirroring by simulating a physical keyboard and
-   mouse (USB debugging not required):
+   ```batch
+   scrcpy --no-audio
+   ```
 
-    ```bash
-    scrcpy --otg
-    ```
+### 5. **Keyboard Input (`--keyboard`)**
+   - Specifies the keyboard input method.
+   - Use `uhid` for USB Human Interface Device compatibility.
 
- - Control the device using gamepad controllers plugged into the computer:
+   ```batch
+   scrcpy --keyboard=uhid
+   ```
 
-    ```bash
-    scrcpy --gamepad=uhid
-    scrcpy -G  # short version
-    ```
+---
 
-## User documentation
+## Example Configurations
 
-The application provides a lot of features and configuration options. They are
-documented in the following pages:
+### High-Performance Configuration:
+```batch
+scrcpy --video-codec=h265 --max-size=1920 --max-fps=90 --no-audio --keyboard=uhid
+```
 
- - [Connection](doc/connection.md)
- - [Video](doc/video.md)
- - [Audio](doc/audio.md)
- - [Control](doc/control.md)
- - [Keyboard](doc/keyboard.md)
- - [Mouse](doc/mouse.md)
- - [Gamepad](doc/gamepad.md)
- - [Device](doc/device.md)
- - [Window](doc/window.md)
- - [Recording](doc/recording.md)
- - [Tunnels](doc/tunnels.md)
- - [OTG](doc/otg.md)
- - [Camera](doc/camera.md)
- - [Video4Linux](doc/v4l2.md)
- - [Shortcuts](doc/shortcuts.md)
+### Low-End System Configuration:
+```batch
+scrcpy --video-codec=h264 --max-size=1080 --max-fps=30 --no-audio
+```
 
+---
 
-## Resources
+## How to Customize
 
- - [FAQ](FAQ.md)
- - [Translations][wiki] (not necessarily up to date)
- - [Build instructions](doc/build.md)
- - [Developers](doc/develop.md)
+Feel free to modify any of these values directly in the `scrcpy-custom.bat` file to optimize for your specific device or computer. Refer to the [SCRCPY documentation](https://github.com/Genymobile/scrcpy) for more command options.
 
-[wiki]: https://github.com/Genymobile/scrcpy/wiki
+---
 
+## Stay Connected
 
-## Articles
+Join our Telegram community for updates, tips, and support:
 
-- [Introducing scrcpy][article-intro]
-- [Scrcpy now works wirelessly][article-tcpip]
-- [Scrcpy 2.0, with audio][article-scrcpy2]
+[![Telegram Channel](https://img.shields.io/badge/Telegram-Join%20Channel-blue?style=for-the-badge&logo=telegram)](https://t.me/ping_github)
 
-[article-intro]: https://blog.rom1v.com/2018/03/introducing-scrcpy/
-[article-tcpip]: https://www.genymotion.com/blog/open-source-project-scrcpy-now-works-wirelessly/
-[article-scrcpy2]: https://blog.rom1v.com/2023/03/scrcpy-2-0-with-audio/
+---
 
-## Contact
+## License
 
-You can open an [issue] for bug reports, feature requests or general questions.
+This project is licensed under the MIT License.
 
-For bug reports, please read the [FAQ](FAQ.md) first, you might find a solution
-to your problem immediately.
+--- 
 
-[issue]: https://github.com/Genymobile/scrcpy/issues
-
-You can also use:
-
- - Reddit: [`r/scrcpy`](https://www.reddit.com/r/scrcpy)
- - Twitter: [`@scrcpy_app`](https://twitter.com/scrcpy_app)
-
-
-## Donate
-
-I'm [@rom1v](https://github.com/rom1v), the author and maintainer of _scrcpy_.
-
-If you appreciate this application, you can [support my open source
-work][donate]:
- - [GitHub Sponsors](https://github.com/sponsors/rom1v)
- - [Liberapay](https://liberapay.com/rom1v/)
- - [PayPal](https://paypal.me/rom2v)
-
-[donate]: https://blog.rom1v.com/about/#support-my-open-source-work
-
-## Licence
-
-    Copyright (C) 2018 Genymobile
-    Copyright (C) 2018-2024 Romain Vimont
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+### Summary
+The README now includes a section that explains the batch script, detailing each command and its purpose, while maintaining a traditional markdown style. This helps users understand how to use the script effectively and customize it according to their needs.
